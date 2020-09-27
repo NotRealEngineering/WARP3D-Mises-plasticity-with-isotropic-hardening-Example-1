@@ -1,0 +1,60 @@
+!
+ structure bar
+! 
+ material metal
+  properties bilinear e 30000 nu 0.3 yld_pt 60.0 tan_e 300.0,
+  rho 7.3e-07 alpha 0.0
+!
+ number of nodes 12 elements 2
+!
+ elements
+ 1-2 type l3disop linear material metal,
+     order 2x2x2 bbar short
+!
+ coordinates
+      1  0.0 0.0 0.0
+      2  1.0 0.0 0.0
+      3  0.0 1.0 0.0
+      4  1.0 1.0 0.0
+      5  0.0 2.0 0.0
+      6  1.0 2.0 0.0
+      7  0.0 0.0 1.0
+      8  1.0 0.0 1.0
+      9  0.0 1.0 1.0
+     10  1.0 1.0 1.0
+     11  0.0 2.0 1.0
+     12  1.0 2.0 1.0
+! 
+ incidences 
+   1     1   2   4   3   7   8  10   9
+   2     3   4   6   5   9  10  12  11
+!
+ blocking automatic
+ output model flat patran convention text file “model”
+!
+ constraints
+    1 2 7 8 u 0 v 0 w 0
+!
+ loading top_pressure
+  element loads
+      2 face 4 pressure -1.0
+!
+ loading test  
+  nonlinear
+    step 1 top_pressure 10
+    
+nonlinear analysis parameters
+   solution technique sparse direct 
+   maximum iterations 1 $ newton
+   minimum iterations 1
+   convergence test norm res tol 0.01
+   time step 1.0
+! 
+ compute displacements for loading test,
+   step 1
+ output flat text displacements
+ output flat text stresses
+ output flat text strains 
+ output flat text reactions
+!
+stop
